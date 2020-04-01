@@ -17,4 +17,9 @@ export class NotificationAndroid extends Notification {
   get sound(): string {
     return this.payload.sound;
   }
+
+  get priority(): number {
+    return this.payload.priority;
+  }
+
 }

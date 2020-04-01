@@ -18,6 +18,8 @@ public class PushNotificationProps {
         return mBundle.getString("body");
     }
 
+    public Integer getPriority() { return (int) Math.round(mBundle.getDouble("priority", 1)); }
+
     public Bundle asBundle() {
         return (Bundle) mBundle.clone();
     }

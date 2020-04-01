@@ -29,4 +29,8 @@ export class Notification {
   get thread(): string {
     return this.payload.thread;
   }
+
+  get priority(): number {
+    return this.payload.priority;
+  }
 }

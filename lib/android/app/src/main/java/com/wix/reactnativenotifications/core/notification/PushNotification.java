@@ -139,27 +139,35 @@ public class PushNotification implements IPushNotification {
 
     protected Notification.Builder getNotificationBuilder(PendingIntent intent) {
 
-        String CHANNEL_ID = "channel_01";
-        String CHANNEL_NAME = "Channel Name";
+        String CHANNEL_ID_0 = "important_channel";
+        String CHANNEL_NAME_0 = "High Priority Notification";
+        String CHANNEL_ID_1 = "regular_channel";
+        String CHANNEL_NAME_1 = "Regular Notifications";
+        if (mNotificationProps.getPriority() == 0) {
+            return getNotificationBuilder(intent, CHANNEL_ID_0, CHANNEL_NAME_0, true);
+        }
+        return getNotificationBuilder(intent, CHANNEL_ID_1, CHANNEL_NAME_1, false);
+    }
 
+    private Notification.Builder getNotificationBuilder(PendingIntent intent, String channelId, String channelName, boolean isHighPriority) {
         final Notification.Builder notification = new Notification.Builder(mContext)
                 .setContentTitle(mNotificationProps.getTitle())
                 .setContentText(mNotificationProps.getBody())
                 .setContentIntent(intent)
                 .setDefaults(Notification.DEFAULT_ALL)
+                .setPriority(isHighPriority ? Notification.PRIORITY_MAX : Notification.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
-
         setUpIcon(notification);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    channelName,
+                    isHighPriority ? NotificationManager.IMPORTANCE_HIGH : NotificationManager.IMPORTANCE_DEFAULT
+            );
             final NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(channel);
-            notification.setChannelId(CHANNEL_ID);
+            notification.setChannelId(channelId);
         }
-
         return notification;
     }
 
